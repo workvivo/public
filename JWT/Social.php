@@ -22,7 +22,7 @@ class Social extends Controller
         $publicKey = file_get_contents($WVPublicKeySource.$keyid); 
         
         /* 
-        confirm the JWT with the public key, a good library will return an error
+        confirm the JWT with the public key, a good library will return an error 1
         if the JWT has expired do check your Library, recommend looking 
         here https://jwt.io/libraries for the fewatures of your Library
          */
