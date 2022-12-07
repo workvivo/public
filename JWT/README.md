@@ -1,6 +1,6 @@
 A basic Laravel / PHP sample to validate the JWT token. [See all the detail here](https://workvivo.notion.site/JWT-authenticator-81ab55ea36774cdfa3eac6ac26db3da9)
 
-###Environment variables
+## Environment variables
 
 These are the environment variables used in the sample code.
 
