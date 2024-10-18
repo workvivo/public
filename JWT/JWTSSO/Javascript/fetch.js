@@ -8,7 +8,7 @@ const workvivoURL = "{{ $url }}";
 
 function fetchSSOConnect() {
     fetch(workvivoURL, {
-        method: "GET",´
+        method: "GET",
         headers: {
             "x-workvivo-jwt": workvivoJWT, // set the workvivo cookie via Header
         },
