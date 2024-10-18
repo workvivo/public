@@ -1,13 +1,18 @@
+/* 
+This code will request CORS to the Workvivo server.
+You will need to ensure that you have enabled CORS in your organisation.
+See https://developer.workvivo.com
+*/
 const workvivoJWT = "{{ $jwt }}";
 const workvivoURL = "{{ $url }}";
 
 function fetchSSOConnect() {
     fetch(workvivoURL, {
-        method: "GET",
+        method: "GET",´
         headers: {
-            "x-workvivo-jwt": workvivoJWT,
+            "x-workvivo-jwt": workvivoJWT, // set the workvivo cookie via Header
         },
-        credentials: "include" // Include cookies in the request
+        credentials: "include" // required to access cookies
     })
     .then(response => {
         if (!response.ok) {
