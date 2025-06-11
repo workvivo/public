@@ -1,0 +1,7 @@
+{
+    "require": {
+        "firebase/php-jwt": "^6.11",
+        "nesbot/carbon": "^3.9",
+        "illuminate/support": "^12.17"
+    }
+}
