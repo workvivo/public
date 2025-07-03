@@ -11,7 +11,6 @@ with open("public.pem", "rb") as f:
     pubkey_pem = f.read()
     pubkey = serialization.load_pem_public_key(pubkey_pem, backend=default_backend())
 
-# Generate kid as SHA-256 hash of DER-encoded public key, base64url-encoded (no padding)
 pubkey_der = pubkey.public_bytes(
     encoding=serialization.Encoding.DER,
     format=serialization.PublicFormat.SubjectPublicKeyInfo
@@ -26,7 +25,7 @@ jwk = {
     "kty": "RSA",
     "use": "sig",
     "alg": "RS256",
-    "kid": kid,  # Generated from public key hash
+    "kid": kid,
     "n": b64url_encode(n),
     "e": b64url_encode(e),
 }
