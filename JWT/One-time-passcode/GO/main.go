@@ -23,28 +23,42 @@ import (
 func main() {
 	privateKey, publicKey := loadOrGenerateKeyPair()
 
-	// === USER NEEDS TO CONFIGURE THESE SETTINGS HERE ===
-
-	orgId := "165"        // This is the organisation ID
+	/*
+		=== USER NEEDS TO CONFIGURE THESE SETTINGS HERE ===
+	*/
+	/*
+	   The Organisation ID is the ID of the Workvivo organisation.
+	*/
+	orgId := "165" // This is the organisation ID
+	/*
+	   The App ID of the Workvivo app with unwiredotp.*.write permission.
+	*/
 	appWorkvivo := "3981" // APP ID from your Workvivo app with unwiredotp.*.write permission
+	/*
+	   The Domain associated with the Workvivo app
+	*/
 	appAud := "unwired.workvivo.red"
-	apiURL := "https://api-gateway.workvivo.red/v1/unwired/users/otp" //In case it is EU Production HOST should be api.workvivo.com
-	postData := `{"email": "test@nomail"}`
+	/*
+	   The API Gateway URL for Workvivo, sample code is using api.workvivo.red, for production environments you will need to change this to the appropriate URL for your Workvivo environment.
 
-	// === KEYPAIR GENERATION OR LOADING ===
+	   EU Production
+	   api.workvivo.com
+	   api.eu2.workvivo.com
+
+	   US Production
+	   api.workvivo.us
+	   api.us2.workvivo.us
+
+	   Middle East Production
+	   api.workvivo.me
+
+	*/
+	apiURL := "https://api.workvivo.red/v1/unwired/users/otp"
 
 	/*
-	* You can generate your own RSA keypair manually using OpenSSL:
-	*
-	* # Generate a 4096-bit private key
-	* openssl genpkey -algorithm RSA -out private.pem -pkeyopt rsa_keygen_bits:4096
-	*
-	* # Extract the public key from the private key
-	* openssl rsa -in private.pem -pubout -out public.pem
-	*
-	* Place both files (private.pem and public.pem) in the same directory as this script.
-	* The script will use them automatically instead of generating new keys.
-	 */
+	   This is the email address of the user you want a one-time passcode
+	*/
+	postData := `{"email": "test@nomail"}`
 
 	// Create JWT
 	payload := jwt.MapClaims{
@@ -59,25 +73,30 @@ func main() {
 		"state":       randomHex(32),
 	}
 
-	kid := computeKID(publicKey)
+	jwks := readJWKS()
+	var kid string
+	if keys, ok := jwks["keys"].([]interface{}); ok && len(keys) > 0 {
+		if key, ok := keys[0].(map[string]interface{}); ok {
+			if k, ok := key["kid"].(string); ok {
+				kid = k
+			}
+		}
+	}
+
 	token := jwt.NewWithClaims(jwt.SigningMethodRS256, payload)
 	token.Header["kid"] = kid
 	jwtString, err := token.SignedString(privateKey)
 	check(err)
-
-	// JWKS
-	jwks := createJWKS(publicKey, kid)
 
 	fmt.Println("Token (JWT):\n" + jwtString + "\n")
 	fmt.Println("KeyID:\n" + kid + "\n")
 	fmt.Println("Public Key (PEM):")
 	printPublicKeyPEM(publicKey)
 	fmt.Println("\nJWKS:")
-	jwksJSON, _ := json.MarshalIndent(jwks, "", "  ")
-	fmt.Println(string(jwksJSON))
 
-	fmt.Println("\nPress Enter to confirm that JWKS are updated in your organisation here: 'https://HOST/admin/developers/apps/manage':")
-	fmt.Scanln()
+	jwksJSON, _ := json.MarshalIndent(jwks, "", "  ")
+
+	fmt.Println(string(jwksJSON))
 
 	// Perform HTTP request
 
@@ -152,8 +171,8 @@ func printPublicKeyPEM(pub *rsa.PublicKey) {
 }
 
 func loadOrGenerateKeyPair() (*rsa.PrivateKey, *rsa.PublicKey) {
-	privKeyPath := "private.pem"
-	pubKeyPath := "public.pem"
+	privKeyPath := "../Keys/private.pem"
+	pubKeyPath := "../Keys/public.pem"
 
 	if _, err := os.Stat(privKeyPath); os.IsNotExist(err) {
 		fmt.Println("Private key not found. Generating new key pair...")
@@ -195,4 +214,19 @@ func loadOrGenerateKeyPair() (*rsa.PrivateKey, *rsa.PublicKey) {
 		log.Fatal("Not an RSA private key")
 	}
 	return privateKey, &privateKey.PublicKey
+}
+
+func readJWKS() map[string]interface{} {
+	jwks, err := os.ReadFile("../Keys/jwks.json")
+	if err != nil {
+		fmt.Println("Error reading JWKS file:", err)
+		return map[string]interface{}{"keys": []interface{}{}}
+	}
+	var result map[string]interface{}
+	err = json.Unmarshal(jwks, &result)
+	if err != nil {
+		fmt.Println("Error parsing JWKS JSON:", err)
+		return map[string]interface{}{"keys": []interface{}{}}
+	}
+	return result
 }
