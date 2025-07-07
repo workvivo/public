@@ -32,3 +32,51 @@ Start experimenting with the Unwired Users API using the sample code below.
 - The provided scripts and code samples are for demonstration and testing purposes only.
 - For production, always use secure storage and handling for your private keys.
 - Update your Workvivo organisation with your new JWKS as required.
+
+
+## Successful Response Example
+
+A successful request to the `/unwired/users/otp` endpoint will return a response like this:
+
+**Status Code:** `201 Created`
+
+**JSON Response:**
+
+```json
+{
+  "status": "success",
+  "data": {
+    "one_time_passcode": "3JKLZV",
+    "expires_at": 1751928133,
+    "email": "test@nomail",
+    "workvivo_user_id": 3983,
+    "organisation_id": 165,
+    "login_url": "https://unwired.workvivo.red/login"
+  },
+  "message": "One Time Passcode generated successfully."
+}
+```
+
+
+## Rate Limit Response Example
+
+If you exceed the allowed number of password reset requests, you will receive a response like this:
+
+**Status Code:** `429 Too Many Requests`
+
+**JSON Response:**
+
+```json
+{
+  "status": "error",
+  "data": null,
+  "meta": {
+    "errors": [
+      {
+        "path": "{}",
+        "message": "You can only request 2 password resets in a 10-minute period."
+      }
+    ]
+  }
+}
+```
