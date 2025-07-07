@@ -1,4 +1,4 @@
-# Keys for Sample Code
+# Keys used for Sample Code
 
 These keys are used for all the code samples in this repository. They have been registered and associated with the domain `unwired.workvivo.red` for demonstration purposes only.
 
@@ -9,7 +9,7 @@ These keys are used for all the code samples in this repository. They have been 
 
 ## Generating a Public/Private Key Pair
 
-
+you can openssl to generate key pairs
 ### 1. Generate a private key
 This creates `private.pem`:
 ```sh
