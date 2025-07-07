@@ -8,6 +8,6 @@ composer install
 
 * Run 
 ```
-./main.go
+php GenerateJWT.php
 ```
 

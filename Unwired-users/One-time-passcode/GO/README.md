@@ -8,6 +8,6 @@ go build main.go
 
 * Run 
 ```
-php GenerateJWT.php
+./main.go
 ```
 
