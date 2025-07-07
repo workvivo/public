@@ -4,7 +4,7 @@ This repository contains sample code for [Workvivo's APIs: Unwired Users One-Tim
 
 ## Quick Start
 
-Quickly start experimenting with the unwired users API by using one of the following sample code.
+Quickly start experimenting with the unwired users API by using the sample code provided below.
 
 You do **not** need to create a new key pair to run the sample code; keys are already provided and registered with the `unwired.workvivo.red` environment.
 **However, for your own Workvivo environments, you must generate and register your own key pair.**
@@ -30,6 +30,7 @@ See [Python Sample Code](PYTHON/GenerateJWT.py)
 
 ## Additional Notes
 
+- Rate limits are applied to the end point `/unwired/users/otp`
 - The provided scripts and code samples are for demonstration and testing purposes.
 - For production, always use secure storage and handling for your private keys.
 - Update your Workvivo organisation with your new JWKS as required.
