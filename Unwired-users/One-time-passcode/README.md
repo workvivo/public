@@ -1,24 +1,35 @@
-Sample code based on [Workvivo's APIs unwired users one time passcodes](https://developer.workvivo.com/#aa34c835-aefb-4ff4-b1ad-232d00d37a9a)
+# Workvivo Unwired Users One-Time Passcode Sample
 
-To run the sample code you do not need to create a new key pair, they have already been created, and registered with `unwired.workvivo.red`. However you will need to create your own key pair for your Workvivo environments. 
+This repository contains sample code for [Workvivo's APIs: Unwired Users One-Time Passcodes](https://developer.workvivo.com/#aa34c835-aefb-4ff4-b1ad-232d00d37a9a).
 
-*Never share your private keys, and always create new key pair for each of your Workvivo organisations.*
+## Quick Start
 
-Create a public / private key pair
+You do **not** need to create a new key pair to run the sample code—keys are already provided and registered with `unwired.workvivo.red`.
+**However, for your own Workvivo environments, you must generate and register your own key pair.**
 
-* Create a key pair, this creates a file ``private.pem``
-```
-openssl genpkey -algorithm RSA -out private.pem -pkeyopt rsa_keygen_bits:4096 > /dev/null 2>&1
-```
+> **Security Note:**
+> Never share your private keys. Always generate a unique key pair for each Workvivo organisation.
 
-* Extract the public key, this creates a file: ``public.pem``
+---
 
-```
-openssl rsa -in private.pem -pubout -out public.pem
-```
 
-* Create JWKS from public.pem
+## GO
+See [Go Sample Code](../../../JWT/One-time-passcode/GO/main.go)
 
-```
-python3 create_jwks.py >> jwks.json
-```
+## PHP
+See [PHP Sample Code](../../../JWT/One-time-passcode/PHP/GenerateJWT.php)
+
+## Python
+See [Python Sample Code](../../../JWT/One-time-passcode/PYTHON/GenerateJWT.py)
+
+
+
+
+
+## Additional Notes
+
+- The provided scripts and code samples are for demonstration and testing purposes.
+- For production, always use secure storage and handling for your private keys.
+- Update your Workvivo organisation with your new JWKS as required.
+
+---
