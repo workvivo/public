@@ -60,16 +60,26 @@ func main() {
 	*/
 	postData := `{"email": "test@nomail"}`
 
+	/*
+		this will be the customer’s host typically, e.g. acme.com
+	*/
+	appIssuer := "org1"
+
+	/*
+		this will always be 'app' as this API is always called as a Applicaton configured in Workvivo that the Partner Application is using to generate OTPs
+	*/
+	appSubject := "app"
+
 	// Create JWT
 	payload := jwt.MapClaims{
 		"jti":         randomHex(32),
-		"iss":         "org1",
-		"sub":         "app",
+		"iss":         appIssuer,
+		"sub":         appSubject,
 		"workvivo_id": appWorkvivo,
 		"aud":         appAud,
 		"iat":         time.Now().Unix(),
 		"nbf":         time.Now().Unix(),
-		"exp":         time.Now().Add(10 * time.Minute).Unix(),
+		"exp":         time.Now().Add(1 * time.Minute).Unix(),
 		"state":       randomHex(32),
 	}
 
