@@ -1,15 +1,16 @@
-# Keys used for Sample Code
+# Keys Used for Sample Code
 
-These keys are used for all the code samples in this repository. They have been registered and associated with the domain `unwired.workvivo.red` for demonstration purposes only.
+The public/private key pair provided here is **only for use with the code samples in this repository**. These keys are registered and associated with the domain `unwired.workvivo.red` for demonstration purposes.
 
 > **Warning:**
-> **Do NOT use these keys in your own environments.** These are public and intended for testing only. Always generate and register your own key pair for each Workvivo organisation.
+> **Never use these keys in your own environments.** These keys are public and intended for testing only. Always generate and register a unique key pair for each Workvivo organisation.
 
 ---
 
 ## Generating a Public/Private Key Pair
 
-you can openssl to generate key pairs
+You can use OpenSSL to generate key pairs. Below are typical commands to create a new key pair:
+
 ### 1. Generate a private key
 This creates `private.pem`:
 ```sh
@@ -23,9 +24,7 @@ openssl rsa -in private.pem -pubout -out public.pem
 ```
 
 ### 3. Create a JWKS file from your public key
-You can use the `create_jwks.py` script to generate the `jwks.json` file from your `public.pem` file.
-
-This creates `jwks.json`:
+Use the `create_jwks.py` script to generate the `jwks.json` file from your `public.pem` file:
 ```sh
 python3 create_jwks.py > jwks.json
 ```
@@ -35,6 +34,6 @@ python3 create_jwks.py > jwks.json
 ## Additional Notes
 
 - The provided keys and scripts are for demonstration and testing only.
-- Never share your private keys.
+- **Never share your private keys.**
 - For production, always use secure storage and handling for your private keys.
 - Update your Workvivo organisation with your new JWKS as required.
