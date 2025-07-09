@@ -104,17 +104,18 @@ def main():
     keys = jwks.get('keys', [])
     kid = keys[0]['kid'] if keys and 'kid' in keys[0] else None
 
-    # === CREATE JWT ===
+
+      # === CREATE JWT ===
     now = int(time.time())
     payload = {
-        'jti': secrets.token_hex(32),
-        'iss': app_issuer,
-        'sub': app_subject,
-        'workvivo_id': app_workvivo,
         'aud': app_aud,
-        'iat': now,
+        'workvivo_id': app_workvivo,
+        'sub': app_subject,
+        'iss': app_issuer,
         'nbf': now,
+        'iat': now,
         'exp': now + jwt_lifetime,
+        'jti': secrets.token_hex(32),
         'state': secrets.token_hex(32),
     }
     token = jwt.encode(
@@ -124,12 +125,14 @@ def main():
         headers={'kid': kid}
     )
 
-#    print(f"\nToken (JWT):\n{token}\n")
-#    print(f"KeyID:\n{kid}\n")
-#    print("Public Key (PEM):")
-#    print(public_pem.decode())
-#    print("\nJWKS:")
-#    print(json.dumps(jwks, indent=2))
+    print(f"\nJWT payload:")
+    print(json.dumps(payload, indent=2))
+    print(f"\nJWT encoded:\n{token}\n")
+    print(f"KeyID:\n{kid}\n")
+    print("Public Key (PEM):")
+    print(public_pem.decode())
+    print("\nJWKS:")
+    print(json.dumps(jwks, indent=2))
 
     # === SEND REQUEST ===
     headers = {

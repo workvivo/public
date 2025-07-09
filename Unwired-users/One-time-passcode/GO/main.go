@@ -17,6 +17,18 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
+type JWTPayload struct {
+	Aud        string `json:"aud"`
+	WorkvivoID string `json:"workvivo_id"`
+	Sub        string `json:"sub"`
+	Iss        string `json:"iss"`
+	Nbf        int64  `json:"nbf"`
+	Iat        int64  `json:"iat"`
+	Exp        int64  `json:"exp"`
+	Jti        string `json:"jti"`
+	State      string `json:"state"`
+}
+
 func main() {
 	privateKey, publicKey := loadKeyPair()
 
@@ -67,17 +79,30 @@ func main() {
 	*/
 	appSubject := "app"
 
-	// Create JWT
-	payload := jwt.MapClaims{
-		"jti":         randomHex(32),
-		"iss":         appIssuer,
-		"sub":         appSubject,
-		"workvivo_id": appWorkvivo,
-		"aud":         appAud,
-		"iat":         time.Now().Unix(),
-		"nbf":         time.Now().Unix(),
-		"exp":         time.Now().Add(10 * time.Minute).Unix(),
-		"state":       randomHex(32),
+	// Create JWT payload using struct for field order
+	payload := JWTPayload{
+		Aud:        appAud,
+		WorkvivoID: appWorkvivo,
+		Sub:        appSubject,
+		Iss:        appIssuer,
+		Nbf:        time.Now().Unix(),
+		Iat:        time.Now().Unix(),
+		Exp:        time.Now().Add(10 * time.Minute).Unix(),
+		Jti:        randomHex(32),
+		State:      randomHex(32),
+	}
+
+	// Convert struct to map for JWT library
+	payloadMap := map[string]interface{}{
+		"aud":         payload.Aud,
+		"workvivo_id": payload.WorkvivoID,
+		"sub":         payload.Sub,
+		"iss":         payload.Iss,
+		"nbf":         payload.Nbf,
+		"iat":         payload.Iat,
+		"exp":         payload.Exp,
+		"jti":         payload.Jti,
+		"state":       payload.State,
 	}
 
 	jwks := readJWKS()
@@ -90,12 +115,17 @@ func main() {
 		}
 	}
 
-	token := jwt.NewWithClaims(jwt.SigningMethodRS256, payload)
+	token := jwt.NewWithClaims(jwt.SigningMethodRS256, jwt.MapClaims(payloadMap))
 	token.Header["kid"] = kid
 	jwtString, err := token.SignedString(privateKey)
 	check(err)
 
-	fmt.Println("Token (JWT):\n" + jwtString + "\n")
+	// Output JWT payload as prettified JSON
+	payloadJSON, err := json.MarshalIndent(payload, "", "  ")
+	check(err)
+	fmt.Println("JWT payload (JSON):\n" + string(payloadJSON) + "\n")
+
+	fmt.Println("JWT encoded:\n" + jwtString + "\n")
 	fmt.Println("KeyID:\n" + kid + "\n")
 	fmt.Println("Public Key (PEM):")
 	printPublicKeyPEM(publicKey)

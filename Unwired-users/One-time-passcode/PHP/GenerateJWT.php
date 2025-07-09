@@ -80,14 +80,14 @@ if (isset($jwksData['keys'][0]['kid'])) {
 // === CREATE JWT ===
 $now = time();
 $payload = [
-    'jti'          => bin2hex(random_bytes(32)),
-    'iss'          => $appIssuer,
-    'sub'          => $appSubject,
-    'workvivo_id'  => $appWorkvivo,
     'aud'          => $appAud,
-    'iat'          => $now,
+    'workvivo_id'  => $appWorkvivo,
+    'sub'          => $appSubject,
+    'iss'          => $appIssuer,
     'nbf'          => $now,
+    'iat'          => $now,
     'exp'          => $now + 60,
+    'jti'          => bin2hex(random_bytes(32)),
     'state'        => bin2hex(random_bytes(32)),
 ];
 
@@ -99,8 +99,8 @@ $token = JWT::encode(
 );
 
 // === OUTPUT ===
-
-echo "\n=== JWT ===\n$token\n";
+echo "\n=== JWT Payload ===\n".json_encode($payload, JSON_PRETTY_PRINT)."\n";
+echo "\n=== JWT encoded ===\n$token\n";
 echo "\n=== kid ===\n$kid\n";
 echo "\n=== public.pem ===\n$publicPem\n";
 echo "\n=== jwks ===\n".json_encode($jwksData, JSON_PRETTY_PRINT)."\n";
