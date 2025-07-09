@@ -67,16 +67,8 @@ $privatePem = file_get_contents($privKeyFile);
 $publicPem = file_get_contents($pubKeyFile);
 $jwks = file_get_contents($jwksFile);
 $jwksData = json_decode(file_get_contents($jwksFile), true);
-$keyDetails = openssl_pkey_get_details(
-    openssl_pkey_get_public($publicPem)
-);
+
 echo "Loaded existing RSA keypair.\n";
-
-// === UTILITY: base64url ===
-
-function base64url_encode(string $data): string {
-    return rtrim(strtr(base64_encode($data), '+/', '-_'), '=');
-}
 
 $kid = null;
 if (isset($jwksData['keys'][0]['kid'])) {

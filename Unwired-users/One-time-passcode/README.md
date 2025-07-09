@@ -80,3 +80,20 @@ If you exceed the allowed number of password reset requests, you will receive a 
   }
 }
 ```
+
+**Status Code:** `429 Too Many Requests`
+
+```json
+{
+  "status": "error",
+  "data": null,
+  "meta": {
+    "errors": [
+      {
+        "path": "{}",
+        "message": "You have reached the maximum number of password reset requests (10) for the past 24 hours."
+      }
+    ]
+  }
+}
+```
