@@ -60,7 +60,13 @@ A successful request to the `/unwired/users/otp` endpoint will return a response
 
 ## Rate Limit Response Example
 
-If you exceed the allowed number of password reset requests, you will receive a response like this:
+If you exceed the allowed number of password reset requests, you will receive a response following `429 Too Many Requests`
+
+For unwired.workvivo.red we have increased the rate limits:
+
+* 10 requests over a 10 minute period
+* 1440 requests over a 24 hour period
+
 
 **Status Code:** `429 Too Many Requests`
 
