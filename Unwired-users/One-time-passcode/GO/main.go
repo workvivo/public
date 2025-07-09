@@ -79,7 +79,7 @@ func main() {
 		"aud":         appAud,
 		"iat":         time.Now().Unix(),
 		"nbf":         time.Now().Unix(),
-		"exp":         time.Now().Add(1 * time.Minute).Unix(),
+		"exp":         time.Now().Add(10 * time.Minute).Unix(),
 		"state":       randomHex(32),
 	}
 
