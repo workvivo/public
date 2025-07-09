@@ -2,6 +2,17 @@
 
 This repository provides sample code for [Workvivo's Unwired Users One-Time Passcodes API](https://developer.workvivo.com/#aa34c835-aefb-4ff4-b1ad-232d00d37a9a).
 
+---
+
+## Table of Contents
+- [Quick Start](#quick-start)
+- [Sample Code](#sample-code)
+- [Additional Notes](#additional-notes)
+- [Successful Response Example](#successful-response-example)
+- [Rate Limit Information & Responses](#rate-limit-information--responses)
+
+---
+
 ## Quick Start
 
 Start experimenting with the Unwired Users API using the sample code below.
@@ -33,14 +44,13 @@ Start experimenting with the Unwired Users API using the sample code below.
 - For production, always use secure storage and handling for your private keys.
 - Update your Workvivo organisation with your new JWKS as required.
 
+---
 
 ## Successful Response Example
 
 A successful request to the `/unwired/users/otp` endpoint will return a response like this:
 
 **Status Code:** `201 Created`
-
-**JSON Response:**
 
 ```json
 {
@@ -57,20 +67,24 @@ A successful request to the `/unwired/users/otp` endpoint will return a response
 }
 ```
 
+---
 
-## Rate Limit Response Example
+## Rate Limit Information & Responses
 
-If you exceed the allowed number of password reset requests, you will receive a response following `429 Too Many Requests`
+If you exceed the allowed number of password reset requests, you will receive a `429 Too Many Requests` response.
 
-For unwired.workvivo.red we have increased the rate limits:
+### Rate Limits by Environment
 
-* 10 requests over a 10 minute period
-* 1440 requests over a 24 hour period
+| Environment                | 10 min window | 24 hour window |
+|----------------------------|:-------------:|:--------------:|
+| **unwired.workvivo.red**   | 10 requests   | 1440 requests  |
+| **Default (all others)**   | 2 requests    | 10 requests    |
 
+> **Note:** The above limits apply to the `/unwired/users/otp` endpoint. Limits may be subject to change by Workvivo.
 
-**Status Code:** `429 Too Many Requests`
+### Example Rate Limit Responses
 
-**JSON Response:**
+**Exceeded 10-minute window (default):**
 
 ```json
 {
@@ -87,7 +101,7 @@ For unwired.workvivo.red we have increased the rate limits:
 }
 ```
 
-**Status Code:** `429 Too Many Requests`
+**Exceeded 24-hour window (default):**
 
 ```json
 {
@@ -103,3 +117,15 @@ For unwired.workvivo.red we have increased the rate limits:
   }
 }
 ```
+
+---
+
+## Troubleshooting
+
+- Ensure your keys are valid and registered with your Workvivo environment.
+- If you see SSL warnings in Python, see the comments in the sample code for how to disable them (not recommended for production).
+- For any issues with dependencies, see the language-specific README files in each sample directory.
+
+---
+
+For more information, visit the [Workvivo Developer Documentation](https://developer.workvivo.com/).
