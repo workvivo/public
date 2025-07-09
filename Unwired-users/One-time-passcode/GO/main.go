@@ -3,15 +3,12 @@ package main
 import (
 	"crypto/rand"
 	"crypto/rsa"
-	"crypto/sha256"
 	"crypto/x509"
-	"encoding/base64"
 	"encoding/json"
 	"encoding/pem"
 	"fmt"
 	"io"
 	"log"
-	"math/big"
 	"net/http"
 	"os"
 	"strings"
@@ -21,7 +18,7 @@ import (
 )
 
 func main() {
-	privateKey, publicKey := loadOrGenerateKeyPair()
+	privateKey, publicKey := loadKeyPair()
 
 	/*
 		=== USER NEEDS TO CONFIGURE THESE SETTINGS HERE ===
@@ -142,74 +139,14 @@ func randomHex(n int) string {
 	return fmt.Sprintf("%x", rb)
 }
 
-func computeKID(pub *rsa.PublicKey) string {
-	nBytes := pub.N.Bytes()
-	eBytes := big.NewInt(int64(pub.E)).Bytes()
-	jwk := map[string]string{
-		"e":   base64url(eBytes),
-		"kty": "RSA",
-		"n":   base64url(nBytes),
-	}
-	jwkJSON, _ := json.Marshal(jwk)
-	hash := sha256.Sum256(jwkJSON)
-	return base64url(hash[:])
-}
-
-func base64url(b []byte) string {
-	return strings.TrimRight(base64.URLEncoding.EncodeToString(b), "=")
-}
-
-func createJWKS(pub *rsa.PublicKey, kid string) map[string][]map[string]string {
-	return map[string][]map[string]string{
-		"keys": {
-			{
-				"kty": "RSA",
-				"alg": "RS256",
-				"use": "sig",
-				"kid": kid,
-				"n":   base64url(pub.N.Bytes()),
-				"e":   base64url(big.NewInt(int64(pub.E)).Bytes()),
-			},
-		},
-	}
-}
-
 func printPublicKeyPEM(pub *rsa.PublicKey) {
 	pubBytes, err := x509.MarshalPKIXPublicKey(pub)
 	check(err)
 	pem.Encode(os.Stdout, &pem.Block{Type: "PUBLIC KEY", Bytes: pubBytes})
 }
 
-func loadOrGenerateKeyPair() (*rsa.PrivateKey, *rsa.PublicKey) {
+func loadKeyPair() (*rsa.PrivateKey, *rsa.PublicKey) {
 	privKeyPath := "../Keys/private.pem"
-	pubKeyPath := "../Keys/public.pem"
-
-	if _, err := os.Stat(privKeyPath); os.IsNotExist(err) {
-		fmt.Println("Private key not found. Generating new key pair...")
-
-		privateKey, err := rsa.GenerateKey(rand.Reader, 4096)
-		check(err)
-
-		privBytes, err := x509.MarshalPKCS8PrivateKey(privateKey)
-		check(err)
-
-		privPem := pem.EncodeToMemory(&pem.Block{
-			Type:  "PRIVATE KEY",
-			Bytes: privBytes,
-		})
-		err = os.WriteFile(privKeyPath, privPem, 0600)
-		check(err)
-
-		pubBytes, err := x509.MarshalPKIXPublicKey(&privateKey.PublicKey)
-		check(err)
-		pubPem := pem.EncodeToMemory(&pem.Block{
-			Type:  "PUBLIC KEY",
-			Bytes: pubBytes,
-		})
-		err = os.WriteFile(pubKeyPath, pubPem, 0644)
-		check(err)
-		return privateKey, &privateKey.PublicKey
-	}
 
 	privPem, err := os.ReadFile(privKeyPath)
 	check(err)
