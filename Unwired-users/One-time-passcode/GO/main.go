@@ -18,15 +18,15 @@ import (
 )
 
 type JWTPayload struct {
-	Aud        string `json:"aud"`
-	WorkvivoID string `json:"workvivo_id"`
-	Sub        string `json:"sub"`
-	Iss        string `json:"iss"`
-	Nbf        int64  `json:"nbf"`
-	Iat        int64  `json:"iat"`
-	Exp        int64  `json:"exp"`
-	Jti        string `json:"jti"`
-	State      string `json:"state"`
+	Aud   string `json:"aud"`
+	AppID string `json:"app_id"`
+	Sub   string `json:"sub"`
+	Iss   string `json:"iss"`
+	Nbf   int64  `json:"nbf"`
+	Iat   int64  `json:"iat"`
+	Exp   int64  `json:"exp"`
+	Jti   string `json:"jti"`
+	State string `json:"state"`
 }
 
 func main() {
@@ -81,28 +81,28 @@ func main() {
 
 	// Create JWT payload using struct for field order
 	payload := JWTPayload{
-		Aud:        appAud,
-		WorkvivoID: appWorkvivo,
-		Sub:        appSubject,
-		Iss:        appIssuer,
-		Nbf:        time.Now().Unix(),
-		Iat:        time.Now().Unix(),
-		Exp:        time.Now().Add(10 * time.Minute).Unix(),
-		Jti:        randomHex(32),
-		State:      randomHex(32),
+		Aud:   appAud,
+		AppID: appWorkvivo,
+		Sub:   appSubject,
+		Iss:   appIssuer,
+		Nbf:   time.Now().Unix(),
+		Iat:   time.Now().Unix(),
+		Exp:   time.Now().Add(10 * time.Minute).Unix(),
+		Jti:   randomHex(32),
+		State: randomHex(32),
 	}
 
 	// Convert struct to map for JWT library
 	payloadMap := map[string]interface{}{
-		"aud":         payload.Aud,
-		"workvivo_id": payload.WorkvivoID,
-		"sub":         payload.Sub,
-		"iss":         payload.Iss,
-		"nbf":         payload.Nbf,
-		"iat":         payload.Iat,
-		"exp":         payload.Exp,
-		"jti":         payload.Jti,
-		"state":       payload.State,
+		"aud":    payload.Aud,
+		"app_id": payload.AppID,
+		"sub":    payload.Sub,
+		"iss":    payload.Iss,
+		"nbf":    payload.Nbf,
+		"iat":    payload.Iat,
+		"exp":    payload.Exp,
+		"jti":    payload.Jti,
+		"state":  payload.State,
 	}
 
 	jwks := readJWKS()

@@ -109,7 +109,7 @@ def main():
     now = int(time.time())
     payload = {
         'aud': app_aud,
-        'workvivo_id': app_workvivo,
+        'app_id': app_workvivo,
         'sub': app_subject,
         'iss': app_issuer,
         'nbf': now,
