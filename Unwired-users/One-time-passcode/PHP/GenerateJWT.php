@@ -81,7 +81,7 @@ if (isset($jwksData['keys'][0]['kid'])) {
 $now = time();
 $payload = [
     'aud'          => $appAud,
-    'workvivo_id'  => $appWorkvivo,
+    'app_id'       => $appWorkvivo,
     'sub'          => $appSubject,
     'iss'          => $appIssuer,
     'nbf'          => $now,
